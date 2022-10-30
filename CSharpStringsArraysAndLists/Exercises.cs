@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +18,53 @@ namespace CSharpStringsArraysAndLists
         // Create an array of doubles each of which holds three coordinates
         // Print these to the screen
 
+        public static void Question1()
+        {
+            int[] coordinates = new int[3] {1,2,4};
+            foreach (int coordinate in coordinates)
+            {
+                Console.WriteLine(coordinate);
+            }
+        }
+      
         // 2: Byte Arrays
         // i) Create an array of bytes that represents the word hello. Convert this to a string and output the result.
         // ii) Convert the word hello both in Chinese and in English to bytes. Output the byte array. 
+
+        public static void Question2()        
+        {
+            byte[] helloInBytes = new byte[5] { 0b01101000, 0b01100101, 0b01101100, 0b01101100, 0b01101111 };
+            string chineseHello = "你好";
+            string englishHello = "Hello";
+            byte[] chineseHelloInBytes = Encoding.UTF8.GetBytes(chineseHello);
+            byte[] englishHelloInBytes = Encoding.UTF8.GetBytes(englishHello);
+            Console.WriteLine(Encoding.UTF8.GetString(helloInBytes));
+            foreach (byte c in englishHelloInBytes)
+            {
+                Console.WriteLine(Convert.ToString(c,2));
+            }
+            foreach (byte c in chineseHelloInBytes)
+            {
+                Console.WriteLine(Convert.ToString(c,2));
+            }
+
+            
+
+        }
 
         // 3: Temperatures
         // Populate a list of doubles to represent daily temperatures over two weeks
         // Calculate and output the min, max and average temperatures over the time period
         // Sort the list in ascending order and print it out
+        public static void Question3()
+        {
+            double[] temperatures = new double[4] {20,19,23,30};
+            Array.Sort(temperatures);
+            foreach (double d in temperatures) { Console.Write($"{d} "); }
+            Console.WriteLine($"\nMin:{temperatures[0]}\nMax:{temperatures[temperatures.Length-1]}\nAvg:{temperatures.Sum()/temperatures.Length}");
+            
+        }
+
 
         // 4: Students
         // Populate a list of student data with a firstname, surname and date of birth. Use a tuple.
@@ -32,13 +72,59 @@ namespace CSharpStringsArraysAndLists
         // Print out how many students were born after 2010
         // Create a new list of strings with the full names of all the students and print this out     
 
+        public static void Question4()
+        {
+            var List = new List<Tuple<string, string, DateOnly>>
+            {
+                new Tuple<string,string,DateOnly>("bob","smith", new DateOnly(2011,01,22)),
+                new Tuple<string, string, DateOnly>("alice", "ledger", new DateOnly(2001, 01, 22)),
+                new Tuple<string, string, DateOnly>("reginald", "mould", new DateOnly(2013, 03, 29))
+            };
+            DateOnly oldestDate = DateOnly.FromDateTime(DateTime.Now);
+            string oldest = "null";
+            DateOnly youngestDate = DateOnly.FromDateTime(DateTime.MinValue);
+            string youngest = "null";
+            int counter = 0;
+            foreach (Tuple<string,string, DateOnly> student in List)
+            {
+                if (student.Item3 < oldestDate)
+                {
+                    oldestDate = student.Item3;
+                    oldest = student.Item1;
+                }
+            }
+            foreach (Tuple<string, string, DateOnly> student in List)
+            {
+                if (student.Item3 > youngestDate)
+                {
+                    youngestDate = student.Item3;
+                    youngest = student.Item1;
+                }
+            }
+            foreach (Tuple<string, string, DateOnly> student in List)
+            {
+                if (student.Item3 > new DateOnly(2011, 1, 1))
+                {
+                    counter++;
+                }
+            }
+                Console.WriteLine($"the youngest is: {youngest} (born:{youngestDate})\nthe oldest is: {oldest} (born:{oldestDate})\nstudents born after 2010: {counter}");
+
+        }
+
         // 5: Pig Latin
         // Move the first letter of each word to the end of it, then add "ay" to the end of the word. 
         // Leave punctuation marks untouched.
         // The cat sat on the mat. => heTay atcay noay hetay atmay.
         public static string PigLatin(string input)
         {
-            throw new NotImplementedException();
+            List<string> inputList = input.Split(" ").ToList();
+            StringBuilder output = new StringBuilder();
+            foreach (string word in inputList)
+            {
+                output.Append($"{word.Remove(0, 1)}{word.Remove(1,word.Length-1)}ay ");
+            }
+            return output.ToString();
         }
 
         // 6. Mexican wave
